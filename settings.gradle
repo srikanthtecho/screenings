@@ -1,0 +1,4 @@
+rootProject.name = "screenings"
+
+include "applications:module-service"
+include "components:module"
