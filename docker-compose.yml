@@ -4,21 +4,46 @@ services:
   mongo:
     image: mongo
     networks:
-      - cms-network
+      - my-network
     ports:
       - "27017:27017"
     expose:
       - "27017"
+
   eureka:
     image: springcloud/eureka
     networks:
-      - cms-network
+      - my-network
     ports:
       - "8761:8761"
     expose:
       - "8761"
+  redis:
+    image: redis
+    networks:
+      - my-network
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
 
-                
+  interview-db:
+      image: mysql:latest
+      environment:
+        - MYSQL_ROOT_PASSWORD=admin123
+        - MYSQL_USER=dbuser
+        - MYSQL_PASSWORD=password
+        - MYSQL_DATABASE=interview
+  #    volumes:
+  #      - mysql-data:/home.scripts
+  #    working_dir: "/home/scripts"
+      networks:
+        - my-network
+      ports:
+        - "3306:3306"
+      expose:
+        - "3306"
+
 networks:
-  cms-network:
+  my-network:
     driver: bridge

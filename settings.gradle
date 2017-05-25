@@ -1,4 +1,12 @@
 rootProject.name = "screenings"
 
-include "applications:module-service"
-include "components:module"
+include "applications:gateway"
+include "applications:skill-server"
+include "applications:position-server"
+include "applications:interview-server"
+
+include "components:position"
+include "components:interview"
+include 'components:skill'
+findProject(':components:skill')?.name = 'skill'
+

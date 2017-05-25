@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: local
+
+zuul:
+  routes:
+   skills:
+    path: /json/skills/**
+    serviceId: skill-server
+    stripPrefix: false
+   positions:
+    path: /json/positions/**
+    serviceId: position-server
+    stripPrefix: false
+#   imageman:
+#    path: /imageman/**
+#    serviceId: imageman
+#    stripPrefix: false
+#spring:
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5Dialect
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/interview?useSSL=false
+#    username: root
+#    password: admin123
+#    driver-class-name: com.mysql.jdbc.Driver
+#
+#  security:
+#    basic:
+#      enabled: false
+
