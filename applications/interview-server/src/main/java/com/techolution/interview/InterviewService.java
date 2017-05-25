@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by tdelesio on 5/24/17.
@@ -33,6 +34,8 @@ public class InterviewService {
 
     public Interview createInterview(Interview interview)
     {
+        String id = UUID.randomUUID().toString();
+        interview.setId(id);
         return interviewRepository.save(interview);
     }
 }

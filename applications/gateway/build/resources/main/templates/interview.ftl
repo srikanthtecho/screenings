@@ -1,10 +1,16 @@
 <#import "layouts/main.ftl" as mainLayout>
 <#import "/spring.ftl" as spring />
 
+<script type="text/javascript">
+    function setPositionName(selObj){
+        document.forms['form'].positionText.value = selObj.options[selObj.options.selectedIndex].label;
+    }
+</script>
+
 <@mainLayout.application "Assessments">
 
 <div class="jumbotron">
-    <h1>Skills</h1>
+    <h1>Interviews</h1>
     <p class="lead">Setup and manage interviews. </p>
     <p>
 
@@ -12,6 +18,7 @@
 
         <form action="/interviews" method="POST" id="form">
             <@spring.bind "interview" />
+            <input type="hidden" name="positionText" />
             <table>
                 <tr>
                     <td>Candidate Name:</td>
@@ -27,11 +34,17 @@
                 </tr>
                 <tr>
                     <td>Position</td>
-                    <td>  <@spring.formInput "interview.type" /> </td>
+                    <td><select name="positionId" onchange='javascript: setPositionName(this);'>
+                        <option value="">Select Position</option>
+                        <#list positions as position>
+                            <option value="${position.id}">${position.positionName} - ${position.companyName}</option>
+                        </#list>
+                    </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Interview Date</td>
-                    <td>  <@spring.formInput "interview.type" /> </td>
+                    <td>  <@spring.formInput "interview.date" /> </td>
                 </tr>
                 <tr>
                     <td>General Notes</td>
@@ -40,7 +53,7 @@
 
                 <tr>
                     <td colspan="2">
-                        <a class="btn btn-lg btn-success" onclick="document.getElementById('form').submit();" href="#" role="button">Create New Skill</a>
+                        <a class="btn btn-lg btn-success" onclick="document.getElementById('form').submit();" href="#" role="button">Setup Interview</a>
                     </td>
                 </tr>
             </table>
@@ -62,7 +75,7 @@
 <div class="row marketing">
 <#list interviews as intview>
 <div class="col-lg-6">
-<span>${intview.dateAsText}</span> <span>${intview.positionText}</span> <span>${intview.candidateName}</span> <span>${intview.interviewer}</span> <span>${intview.status}</span> <span>${intview.type}</span> <span><a href="/intervews/${intview.id}">Detail</a></span> <span><a href="/intervews/${intview.id}/start">Start Interview</a></span>
+<span>${intview.date}</span> <span>${intview.positionText}</span> <span>${intview.candidateName}</span> <span>${intview.interviewer}</span> <span>${intview.status}</span> <span>${intview.type}</span> <span><a href="/interviews/${intview.id}">Detail</a></span> <span><a href="/interviews/${intview.id}/start">Start Interview</a></span>
 </div>
 </#list>
 </div>

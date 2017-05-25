@@ -9,11 +9,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/json")
-public class PositionController {
+public class PositionRestController {
 
     private PositionService positionService;
 
-    public PositionController(PositionService positionService)
+    public PositionRestController(PositionService positionService)
     {
         this.positionService = positionService;
     }

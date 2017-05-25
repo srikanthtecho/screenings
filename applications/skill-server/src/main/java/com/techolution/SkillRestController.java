@@ -12,11 +12,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/json")
     //, produces={MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
-public class SkillController {
+public class SkillRestController {
 
     private SkillService skillService;
 
-    public SkillController(SkillService skillService)
+    public SkillRestController(SkillService skillService)
     {
         this.skillService = skillService;
     }

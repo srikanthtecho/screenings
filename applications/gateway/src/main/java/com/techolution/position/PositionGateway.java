@@ -1,4 +1,4 @@
-package com.techolution.gateway;
+package com.techolution.position;
 
 import com.techolution.position.Position;
 import com.techolution.skill.Skill;

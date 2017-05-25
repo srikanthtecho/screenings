@@ -1,5 +1,7 @@
 package com.techolution.interview;
 
+import com.techolution.position.Position;
+import com.techolution.position.PositionGateway;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,16 +14,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by tdelesio on 5/24/17.
+ * Created by tdelesio on 5/25/17.
  */
 @Controller
 public class InterviewController {
 
-    private InterviewService interviewService;
+    private InterviewGateway interviewGateway;
+    private PositionGateway positionGateway;
 
-    public InterviewController(InterviewService interviewService)
+    public InterviewController(InterviewGateway interviewGateway, PositionGateway positionGateway)
     {
-        this.interviewService = interviewService;
+        this.positionGateway = positionGateway;
+        this.interviewGateway = interviewGateway;
     }
 
     @ModelAttribute("interview")
@@ -29,11 +33,17 @@ public class InterviewController {
         return new Interview();
     }
 
+    @ModelAttribute("positions")
+    public List<Position> getAllPositions()
+    {
+        return positionGateway.getAllPositions();
+    }
+
     private Map<String, Object> preloadInterview()
     {
         Map<String, Object> model = new HashMap<>();
 
-        List<Interview> interviews = interviewService.getAllInterviews();
+        List<Interview> interviews = interviewGateway.getAllInterviews();
         model.put("interviews", interviews);
 
         return model;
@@ -42,7 +52,7 @@ public class InterviewController {
     @PostMapping("/interviews")
     public ModelAndView createInterview(Interview interview)
     {
-        interview = interviewService.createInterview(interview);
+        interview = interviewGateway.createInterview(interview);
 
         return new ModelAndView("interview", preloadInterview());
     }
@@ -59,7 +69,7 @@ public class InterviewController {
     {
         Map<String, Object> model = new HashMap<>();
 
-        Interview interview = interviewService.getInterviewById(id);
+        Interview interview = interviewGateway.getInterviewById(id);
         model.put("interview", interview);
 
         return new ModelAndView("interview-details", model);
