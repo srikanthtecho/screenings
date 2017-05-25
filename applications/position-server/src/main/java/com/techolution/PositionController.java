@@ -36,7 +36,7 @@ public class PositionController {
     }
 
     @PostMapping("/positions")
-    public Position createPosition(Position position) {
+    public Position createPosition(@RequestBody Position position) {
 
         return positionService.createPosition(position);
 
@@ -44,7 +44,7 @@ public class PositionController {
 
 
     @PostMapping("/positions/link")
-    public Position linkSkillsToPosition(Position position) {
+    public Position linkSkillsToPosition(@RequestBody Position position) {
 
         return positionService.linkSkillsToPosition(position);
 

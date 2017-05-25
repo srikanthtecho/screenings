@@ -2,6 +2,7 @@ package com.techolution;
 
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/json")
+    //, produces={MediaType.APPLICATION_JSON_VALUE}, consumes = {MediaType.APPLICATION_JSON_VALUE})
 public class SkillController {
 
     private SkillService skillService;
@@ -35,14 +37,14 @@ public class SkillController {
 
 
     @PostMapping("/skills")
-    public Skill createSkill(Skill skill) {
+    public Skill createSkill(@RequestBody Skill skill) {
 
 
         return skillService.createSkill(skill);
     }
 
     @PostMapping("/skills/questions")
-    public Skill createQuestion(Question question) {
+    public Skill createQuestion(@RequestBody Question question) {
 
 
         Skill skill = skillService.addQuestion(question);

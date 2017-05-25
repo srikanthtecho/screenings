@@ -29,34 +29,34 @@ public class SkillGateway {
     public List<Skill> getSkillsForSkillIds(String skillId)
     {
         ParameterizedTypeReference<List<Skill>> responseType = new ParameterizedTypeReference<List<Skill>>() {};
-        List<Skill> skills = restTemplate.exchange("//skill-server/json/skills/{id}", HttpMethod.GET, null, responseType,skillId).getBody();
+        List<Skill> skills = restTemplate.exchange("http://skill-server/json/skills/{id}", HttpMethod.GET, null, responseType,skillId).getBody();
         return skills;
     }
 
     public List<Skill> getAllSkills()
     {
         ParameterizedTypeReference<List<Skill>> responseType = new ParameterizedTypeReference<List<Skill>>() {};
-        List<Skill> skills = restTemplate.exchange("//skill-server/json/skills", HttpMethod.GET, null, responseType).getBody();
+        List<Skill> skills = restTemplate.exchange("http://skill-server/json/skills", HttpMethod.GET, null, responseType).getBody();
         return skills;
     }
 
 
     public Skill getSkillById(String skillId)
     {
-        return restTemplate.getForObject("//skill-server/json/skills/{id}", Skill.class, skillId);
+        return restTemplate.getForObject("http://skill-server/json/skills/{id}", Skill.class, skillId);
     }
 
     public Skill createSkill(Skill skill)
     {
-        HttpEntity<Skill> request = new HttpEntity<Skill>(skill) {};
-        skill = restTemplate.postForObject("//skill-server/json/skills", request, Skill.class);
+//        HttpEntity<Skill> request = new HttpEntity<Skill>(skill) {};
+        skill = restTemplate.postForObject("http://skill-server/json/skills", skill, Skill.class);
         return skill;
     }
 
     public Skill addQuestion(Question question)
     {
         HttpEntity<Question> request = new HttpEntity<Question>(question) {};
-        Skill skill = restTemplate.postForObject("//skill-server/json/skills/questions", request, Skill.class);
+        Skill skill = restTemplate.postForObject("http://skill-server/json/skills/questions", request, Skill.class);
         return skill;
     }
 

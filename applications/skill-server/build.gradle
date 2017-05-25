@@ -23,6 +23,10 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:$springBootVersion"
 
+    compile "io.springfox:springfox-swagger2:2.4.0"
+    compile "io.springfox:springfox-swagger-ui:2.4.0"
+
+
 //    compile "org.springframework.boot:spring-boot-starter-freemarker:$springBootVersion"
 //    compile "org.webjars:bootstrap:3.3.7-1"
 //    compile "org.webjars:jquery:3.1.1-1"

@@ -12,11 +12,11 @@ zuul:
    skills:
     path: /json/skills/**
     serviceId: skill-server
-#    stripPrefix: false
+    stripPrefix: false
    positions:
     path: /json/positions/**
     serviceId: position-server
-#    stripPrefix: false
+    stripPrefix: false
 #   imageman:
 #    path: /imageman/**
 #    serviceId: imageman
