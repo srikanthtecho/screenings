@@ -8,5 +8,4 @@ include "applications:interview-server"
 include "components:position"
 include "components:interview"
 include 'components:skill'
-findProject(':components:skill')?.name = 'skill'
 
