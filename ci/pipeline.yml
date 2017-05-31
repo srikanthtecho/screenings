@@ -1,0 +1,266 @@
+jobs:
+  # - name: build-microservices
+  #   public: true
+  #   # serial: true
+  #   plan:
+  #     - put: slack-alert
+  #       params:
+  #         text: Microservice Build started
+  #         # channel: "#general"
+  #         # username: concourse
+  #         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+  #     - get: microservice-source
+  #       trigger: true
+  #     - task: package
+  #       privileged: true
+  #       config:
+  #         platform: linux
+  #         image_resource:
+  #           type: docker-image
+  #           source:
+  #             repository: maven
+  #             tag: latest
+
+  #         inputs:
+  #           - name: microservice-source
+ 
+  #         outputs:
+  #           - name: vrcms-target
+  #           - name: krpano-target
+  #           - name: gateway-target
+  #           - name: imageman-target
+
+  #         run:
+  #           path: bash
+  #           args:
+  #             - -exc
+  #             - |
+
+  #               mvn -f microservice-source/build/pom.xml install
+  #               cp -r microservice-source/vrcms/target/ vrcms-target/target/
+  #               cp microservice-source/vrcms/Dockerfile vrcms-target
+  #               cp -r microservice-source/krpano/target/ krpano-target/target/
+  #               cp microservice-source/krpano/Dockerfile krpano-target
+  #               cp -r microservice-source/gateway/target/ gateway-target/target/
+  #               cp microservice-source/gateway/Dockerfile gateway-target
+  #               cp -r microservice-source/imageman/target/ imageman-target/target/
+  #               cp microservice-source/imageman/Dockerfile imageman-target
+  #       on_failure:
+  #         put: slack-alert
+  #         params:
+  #           text: Build failed
+  #             # channel: "#general"
+  #             # username: concourse
+  #           icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+      
+  #     - aggregate:
+  #       - put: vrcms-docker-image
+  #         params:
+  #           build: vrcms-target
+
+  #       - put: krpano-docker-image
+  #         params:
+  #           build: krpano-target
+  #       - put: gateway-docker-image
+  #         params:
+  #           build: gateway-target
+  #       - put: imageman-docker-image
+  #         params:
+  #           build: imageman-target
+         
+  #     - put: slack-alert
+  #       params:
+  #         text: Microservice Build completed
+  #         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+  # - name: build-ui
+  #   public: true
+  #   # serial: true
+  #   plan:
+  #     - put: slack-alert
+  #       params:
+  #         text: UI Build started
+  #         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+  #     - get: ui-source
+  #       trigger: true
+  #     - task: copy-ui
+  #       privileged: true
+  #       config:
+  #         platform: linux
+  #         image_resource:
+  #           type: docker-image
+  #           source:
+  #             repository: ubuntu
+  #             tag: latest
+
+  #         inputs:
+  #           - name: ui-source
+ 
+  #         outputs:
+  #           - name: ui-target
+
+  #         run:
+  #           path: bash
+  #           args:
+  #             - -exc
+  #             - |
+
+  #               cp -R ui-source/* ui-target/
+  #     - put: svapp-docker-image
+  #       params:
+  #         build: ui-target
+  #     - put: slack-alert
+  #       params:
+  #         text: UI Build completed
+  #         icon_url: http://cl.ly/image/3e1h0H3H2s0P/concourse-logo.png
+  - name: build-test-enviro
+    public: true
+    serial: true
+    plan:
+      # - get: build-ui
+      #   passed: [build-ui]
+      # - get: build-microservices
+      #   passed: [build-microservices]
+      - get: microservice-source
+  #       trigger: true
+      - task: docker-compose
+        # timeout: 20m
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source: 
+              repository: mumoshu/dcind
+              tag: latest
+          inputs:
+            - name: microservice-source
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                source /docker-lib.sh
+                start_docker
+                docker login -u admin -p admin123 nexus.techolution.com:8123
+                docker-compose -f microservice-source/build/docker-compose.prod.yml up -d
+                curl -X GET --header 'Accept: application/json' 'http://localhost:8081/cms/panos'
+
+          
+
+
+
+resources:
+  - name: microservice-source
+    type: git
+    source:
+      uri: https://tim_techolution:k2$kiies@bitbucket.org/techolution/microservices.git
+      branch: master
+#   - name: ui-source
+#     type: git
+#     source:
+#       uri: https://tim_techolution:k2$kiies@bitbucket.org/shuharivilliage/shuharivillage.git
+#       branch: development
+#   - name: vrcms-docker-image
+#     type: docker-image
+#     source:
+#       repository: nexus.techolution.com:8123/vrcms
+#       username: admin
+#       password: admin123
+#   - name: krpano-docker-image
+#     type: docker-image
+#     source:
+#       repository: nexus.techolution.com:8123/krpano
+#       username: admin
+#       password: admin123
+#   - name: gateway-docker-image
+#     type: docker-image
+#     source:
+#       repository: nexus.techolution.com:8123/gateway
+#       username: admin
+#       password: admin123
+#   - name: imageman-docker-image
+#     type: docker-image
+#     source:
+#       repository: nexus.techolution.com:8123/imageman
+#       username: admin
+#       password: admin123
+#   - name: svapp-docker-image
+#     type: docker-image
+#     source:
+#       repository: nexus.techolution.com:8123/svapp
+#       username: admin
+#       password: admin123
+#   - name: slack-alert
+#     type: slack-notification
+#     source:
+#       url: https://hooks.slack.com/services/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
+
+# resource_types:
+# - name: slack-notification
+#   type: docker-image
+#   source:
+#     repository: cfcommunity/slack-notification-resource
+#     tag: latest
+
+
+
+# jobs:
+#   - name: docker-compose
+#     public: true
+#     serial: true
+#     plan:
+#       - do:
+#         - task: docker-compose
+#           timeout: 20m
+#           privileged: true
+#           config:
+#             platform: linux
+#             image_resource:
+#               type: docker-image
+#               source: {repository: "mumoshu/dcind", tag: "latest"}
+#             run:
+#               path: sh
+#               args:
+#                 - -exc
+#                 - |
+#                   source /docker-lib.sh
+#                   start_docker
+#                   docker ps
+#                   docker-compose version
+
+
+      
+      # private_key: (( grab meta.github.private_key ))
+  # - name: edge
+  #   type: docker-image
+  #   source:
+  #     .: (( inject meta.dockerhub ))
+  #     tag: edge
+
+  # - name: latest
+  #   type: docker-image
+  #   source:
+  #     .: (( inject meta.dockerhub ))
+  #     tag: latest
+
+  #     - name: version
+  #   type: semver
+  #   source :
+  #     driver:            s3
+  #     bucket:            (( grab meta.aws.bucket ))
+  #     key:               version
+  #     access_key_id:     (( grab meta.aws.access_key ))
+  #     secret_access_key: (( grab meta.aws.secret_key ))
+  #     initial_version:   (( grab meta.initial_version || "0.0.1" ))
+
+  # - name: notify
+  #   type: slack-notification
+  #   source:
+  #     url: (( grab meta.slack.webhook ))
+
+  # - name: github
+  #   type: github-release
+  #   source:
+  #     user:         (( grab meta.github.owner ))
+  #     repository:   (( grab meta.github.repo ))
+  #     access_token: (( grab meta.github.access_token ))
