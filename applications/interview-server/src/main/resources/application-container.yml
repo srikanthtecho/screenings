@@ -1,0 +1,34 @@
+#security:
+#  oauth2:
+#    resource:
+#      jwt:
+#        key-uri: http://auth.delesio.com:9999/auth/oauth/token_key
+#  basic:
+#    enabled: false
+#  user:
+#    name: admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://hire.techolution.com:8761/eureka/
+  instance:
+    hostname: hire.techolution.com
+    preferIpAddress: true
+    status-page-url: http://hire.techolution.com:${server.port}/info
+    health-check-url: http://hire.techolution.com:${server.port}/health
+    home-page-url: http://hire.techolution.com:${server.port}/
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://interview-db:3306/interview?useSSL=false
+    username: root
+    password: admin123
+    driver-class-name: com.mysql.jdbc.Driver

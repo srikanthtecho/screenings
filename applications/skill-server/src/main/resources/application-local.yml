@@ -1,0 +1,15 @@
+    
+#security:
+#  oauth2:
+#    resource:
+#      jwt:
+#        key-uri: http://localhost:9999/auth/oauth/token_key
+#  basic:
+#    enabled: false
+#  user:
+#    name: admin
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

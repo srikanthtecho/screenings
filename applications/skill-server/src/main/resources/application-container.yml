@@ -1,0 +1,28 @@
+#security:
+#  oauth2:
+#    resource:
+#      jwt:
+#        key-uri: http://auth.delesio.com:9999/auth/oauth/token_key
+#  basic:
+#    enabled: false
+#  user:
+#    name: admin
+
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://10.71.105.211:8761/eureka/
+      defaultZone: http://hire.techolution.com:8761/eureka/
+  instance:
+    hostname: hire.techolution.com
+    preferIpAddress: true
+    status-page-url: http://hire.techolution.com:${server.port}/info
+    health-check-url: http://hire.techolution.com:${server.port}/health
+    home-page-url: http://hire.techolution.com:${server.port}/
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo:27017/vrcms
+   #   uri: mongodb://techolution_user:techolutionisthebest@ds137139.mlab.com:37139/skills
+

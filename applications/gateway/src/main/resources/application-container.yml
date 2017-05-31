@@ -1,0 +1,20 @@
+#security:
+#  oauth2:
+#    resource:
+#      jwt:
+#        key-uri: http://auth.delesio.com:9999/auth/oauth/token_key
+#  basic:
+#    enabled: false
+#  user:
+#    name: admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://hire.techolution.com:8761/eureka/
+  instance:
+    hostname: hire.techolution.com
+#    preferIpAddress: true
+    status-page-url: http://hire.techolution.com:${server.port}/info
+    health-check-url: http://hire.techolution.com:${server.port}/health
+    home-page-url: http://hire.techolution.com:${server.port}/
