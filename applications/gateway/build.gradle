@@ -11,6 +11,24 @@ dependencyManagement {
     }
 }
 
+apply plugin: 'docker'
+apply plugin: 'application'
+mainClassName = 'com.techolution.GatewayApplication'
+
+task buildDocker(type: Docker) {
+    baseImage = 'davidcaste/alpine-java-unlimited-jce:jdk8'
+    push = project.hasProperty('push')
+    tag = 'nexus.techolution.com:8123/screenings/gateway'
+    addFile {
+        from jar
+        rename {'app.jar'}
+    }
+    entryPoint(['java', '-Dspring.profiles.active=container', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+    // exposePort(8080)
+}
+
+buildDocker.dependsOn(build)
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"

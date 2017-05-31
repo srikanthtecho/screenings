@@ -1,5 +1,4 @@
 apply plugin: 'application'
-apply plugin: 'docker'
 
 buildscript {
     ext {
@@ -31,6 +30,6 @@ buildscript {
     }
 }
 
-docker {
-    baseImage "davidcaste/alpine-java-unlimited-jce:jdk8"
-}
+//d
+
+
