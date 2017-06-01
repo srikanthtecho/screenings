@@ -6,9 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class InterviewServiceApplication {
+public class InterviewServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InterviewServiceApplication.class, args);
+		SpringApplication.run(InterviewServerApplication.class, args);
 	}
 }
