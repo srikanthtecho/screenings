@@ -14,35 +14,31 @@ public class PositionService {
 
     private PositionRepository positionRepository;
 
-    public PositionService(PositionRepository positionRepository)
-    {
-        this. positionRepository = positionRepository;
+    public PositionService(PositionRepository positionRepository) {
+        this.positionRepository = positionRepository;
     }
 
-    public Position createPosition(Position position)
-    {
+    public Position createPosition(Position position) {
         return positionRepository.save(position);
     }
 
-    public Position linkSkillsToPosition(Position positionWithSkill)
-    {
+    public Position linkSkillsToPosition(Position positionWithSkill) {
         Position positionFromDB = positionRepository.findOne(positionWithSkill.getId());
         positionFromDB.setSkills(positionWithSkill.getSkills());
 
         return positionRepository.save(positionFromDB);
     }
 
-    public List<Position> getAllPositions()
-    {
+    public List<Position> getAllPositions() {
         List<Position> positions = new ArrayList<>();
 
         positionRepository.findAll().forEach(positions::add);
         return positions;
     }
 
-    public Position getPositionById(String id)
-    {
-        return positionRepository.findOne(id);
+    public Position getPositionById(String id) {
+        final Position position =  positionRepository.findOne(id);
+        return position;
     }
 }
 

@@ -1,55 +1,45 @@
 package com.techolution.interview;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tdelesio on 5/24/17.
  */
 @RestController
-@RequestMapping(value = "/json")
+@RequestMapping(value = "/json/interviews")
 public class InterviewRestController {
 
     private InterviewService interviewService;
 
-    public InterviewRestController(InterviewService interviewService)
-    {
+    public InterviewRestController(InterviewService interviewService) {
         this.interviewService = interviewService;
     }
 
 
-    @PostMapping("/interviews")
-    public Interview createInterview(@RequestBody Interview interview)
-    {
-        return interviewService.createInterview(interview);
+    @PostMapping
+    public Interview createInterview(@RequestBody Interview interview) {
 
+        return interviewService.createInterview(interview);
     }
 
-    @GetMapping("/interviews")
-    public List<Interview> getAllInterviews()
-    {
+    @GetMapping
+    public List<Interview> getAllInterviews() {
 
         return interviewService.getAllInterviews();
     }
 
-    @GetMapping("interviews/{id}")
-    public Interview interviewDetails(@PathVariable String id)
-    {
-        return interviewService.getInterviewById(id);
+    @GetMapping("/{id}")
+    public Interview interviewDetails(@PathVariable String id) {
 
+        return interviewService.getInterviewById(id);
     }
 
-//    @GetMapping("interviews/{id}/start")
-//    public Interview giveInterview(@PathVariable String id)
-//    {
-//        Map<String, Object> model = new HashMap<>();
-//
-//
-//        return new ModelAndView("interview-start", model);
-//    }
+    @GetMapping("/{id}/start")
+    public Map<String, Object> startInterview(@PathVariable String id) {
+
+        return interviewService.startInterview(id);
+
+    }
 }

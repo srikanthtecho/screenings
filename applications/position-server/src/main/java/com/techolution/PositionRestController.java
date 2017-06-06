@@ -2,6 +2,7 @@ package com.techolution;
 
 import com.techolution.position.Position;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -13,8 +14,7 @@ public class PositionRestController {
 
     private PositionService positionService;
 
-    public PositionRestController(PositionService positionService)
-    {
+    public PositionRestController(PositionService positionService) {
         this.positionService = positionService;
     }
 

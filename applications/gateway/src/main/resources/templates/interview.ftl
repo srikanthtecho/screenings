@@ -75,7 +75,7 @@
 <div class="row marketing">
 <#list interviews as intview>
 <div class="col-lg-6">
-<span>${intview.date}</span> <span>${intview.positionText}</span> <span>${intview.candidateName}</span> <span>${intview.interviewer}</span> <span>${intview.status}</span> <span>${intview.type}</span> <span><a href="/interviews/${intview.id}">Detail</a></span> <span><a href="/interviews/${intview.id}/start">Start Interview</a></span>
+<span>${interview.date}</span> <span>${intview.positionText}</span> <span>${intview.candidateName}</span> <span>${intview.interviewer}</span> <span>${intview.status}</span> <span>${intview.type}</span> <span><a href="/interviews/${intview.id}">Detail</a></span> <span><a href="/interviews/${intview.id}/start">Start Interview</a></span>
 </div>
 </#list>
 </div>
