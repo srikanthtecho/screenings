@@ -21,8 +21,7 @@ public class PositionController {
     private PositionGateway positionGateway;
     private SkillGateway skillGateway;
 
-    public PositionController(PositionGateway positionGateway, SkillGateway skillGateway)
-    {
+    public PositionController(PositionGateway positionGateway, SkillGateway skillGateway) {
         this.positionGateway = positionGateway;
         this.skillGateway = skillGateway;
     }
@@ -43,8 +42,38 @@ public class PositionController {
         return new ModelAndView("position", model);
     }
 
-    private Map<String, Object> preloadPositionDetail(String positionId)
-    {
+
+    @GetMapping("/positions/{id}" )
+    public ModelAndView getPositionById(@PathVariable String id) {
+
+        return new ModelAndView("positiondetail", preloadPositionDetail(id));
+    }
+
+//    @GetMapping(name = "/positions/{id}", produces = "application/json")
+//    public Map<String, Object> getPositionById(@PathVariable String id) {
+//
+//        Map<String, Object> map = preloadPositionDetail(id);
+//        return map;
+//    }
+
+
+    @PostMapping("/positions")
+    public ModelAndView createPosition(Position position) {
+
+        positionGateway.createPosition(position);
+        return new ModelAndView("position", preloadPositions());
+    }
+
+
+    @PostMapping("/positions/link")
+    public ModelAndView linkSkillsToPosition(Position position) {
+
+
+        positionGateway.linkSkillsToPosition(position);
+        return new ModelAndView("position", preloadPositions());
+    }
+
+    private Map<String, Object> preloadPositionDetail(String positionId) {
         Map<String, Object> model = new HashMap<>();
 
         Position position = positionGateway.getPositionById(positionId);
@@ -56,39 +85,12 @@ public class PositionController {
         return model;
     }
 
-    @GetMapping("/positions/{id}")
-    public ModelAndView getPositionById(@PathVariable String id) {
-
-
-        return new ModelAndView("positiondetail", preloadPositionDetail(id));
-    }
-
-    private Map<String, Object> preloadPositions()
-    {
+    private Map<String, Object> preloadPositions() {
         Map<String, Object> model = new HashMap<>();
 
         List<Position> positions = positionGateway.getAllPositions();
         model.put("positions", positions);
 
         return model;
-    }
-    @PostMapping("/positions")
-    public ModelAndView createPosition(Position position) {
-
-        positionGateway.createPosition(position);
-
-        return new ModelAndView("position", preloadPositions());
-    }
-
-
-
-    @PostMapping("/positions/link")
-    public ModelAndView linkSkillsToPosition(Position position) {
-
-
-
-        positionGateway.linkSkillsToPosition(position);
-
-        return new ModelAndView("position", preloadPositions());
     }
 }

@@ -5,7 +5,7 @@ import com.techolution.skill.Skill;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collections;git
 import java.util.List;
 import java.util.Set;
 
@@ -15,28 +15,23 @@ import java.util.Set;
 @Service
 public class SkillService {
 
-//    @Autowired
     private SkillRepository skillRepository;
 
-    public SkillService(SkillRepository skillRepository)
-    {
+    public SkillService(SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
     }
 
-    public Skill createSkill(Skill skill)
-    {
-      skillRepository.save(skill);
-      return skill;
+    public Skill createSkill(Skill skill) {
+        skillRepository.save(skill);
+        return skill;
 
     }
 
-    public Skill getSkillById(String id)
-    {
+    public Skill getSkillById(String id) {
         return skillRepository.findOne(id);
     }
 
-    public Skill addQuestion(Question question)
-    {
+    public Skill addQuestion(Question question) {
         Skill skill = skillRepository.findOne(question.getSkillId());
         skill.addQuestion(question);
 
@@ -44,16 +39,14 @@ public class SkillService {
         return skill;
     }
 
-    public List<Skill> getAllSkills()
-    {
+    public List<Skill> getAllSkills() {
         List<Skill> skills = new ArrayList<>();
 
         skillRepository.findAll().forEach(skills::add);
         return skills;
     }
 
-    public List<Skill> getSkillsForSkillIds(Set<String> skillIds)
-    {
+    public List<Skill> getSkillsForSkillIds(Set<String> skillIds) {
         List<Skill> skills = new ArrayList<>();
         if (skillIds == null)
             return Collections.EMPTY_LIST;

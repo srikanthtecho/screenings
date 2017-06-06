@@ -21,7 +21,7 @@ public class Interview {
     private String candidateName;
     private String notes;
 
-    public enum InterviewStatus { SCHEDULED, L1, L2, DONE}
+    public enum InterviewStatus {SCHEDULED, L1, L2, DONE}
 
     public String getPositionText() {
         return positionText;

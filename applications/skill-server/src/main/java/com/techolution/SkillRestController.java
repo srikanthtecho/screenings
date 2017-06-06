@@ -2,9 +2,9 @@ package com.techolution;
 
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tdelesio on 5/23/17.
@@ -43,6 +43,13 @@ public class SkillRestController {
         return skillService.createSkill(skill);
     }
 
+    @GetMapping("/skills/ids/{skillIds}")
+    public List<Skill>  getSkillsForIds(@PathVariable Set<String> skillIds) {
+
+        return  skillService.getSkillsForSkillIds(skillIds);
+
+    }
+
     @PostMapping("/skills/questions")
     public Skill createQuestion(@RequestBody Question question) {
 
@@ -50,4 +57,5 @@ public class SkillRestController {
         Skill skill = skillService.addQuestion(question);
         return skill;
     }
+
 }

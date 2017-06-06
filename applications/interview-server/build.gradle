@@ -41,4 +41,6 @@ dependencies {
     compile "mysql:mysql-connector-java:$mysqlVersion"
 
     compile project(":components:interview")
+    compile project(":components:skill")
+    compile project(":components:position")
 }

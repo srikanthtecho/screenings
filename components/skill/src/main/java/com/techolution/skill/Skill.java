@@ -19,9 +19,6 @@ public class Skill {
         id = UUID.randomUUID().toString();
     }
 
-
-
-
     public void addQuestion(Question q)
     {
         questions.add(q);
