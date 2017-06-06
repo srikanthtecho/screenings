@@ -3,6 +3,7 @@ package com.techolution.interview;
 import com.techolution.position.Position;
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -95,6 +96,10 @@ public class InterviewService {
                 interview.getId(), position.getId());
 
             final Set<String> skillIds = position.getSkills();
+
+            if (CollectionUtils.isEmpty(skillIds)) {
+                return model;
+            }
 
             final String params = StringUtils.join(skillIds, ",");
             final Set<Question> questions = new HashSet<>();
