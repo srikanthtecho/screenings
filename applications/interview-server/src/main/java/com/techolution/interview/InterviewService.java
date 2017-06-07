@@ -1,22 +1,16 @@
 package com.techolution.interview;
 
-import com.netflix.discovery.converters.Auto;
 import com.techolution.position.Position;
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 
@@ -93,7 +87,7 @@ public class InterviewService {
         try {
 
             final Set<String> skillIds = position.getSkills();
-            final Skill[] skills = skillGateway.getSkillsbySkillIds(skillIds);
+            final Skill[] skills = skillGateway.getSkillsBySkillIds(skillIds);
 
             if (ArrayUtils.isEmpty(skills)) {
                 return model;

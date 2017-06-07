@@ -9,12 +9,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,7 +57,7 @@ public class InterviewServiceTest {
 
         when(positionGateway.getPositionById("1")).thenReturn(position);
 
-        when(skillGateway.getSkillsbySkillIds(skillIds)).thenReturn(skills);
+        when(skillGateway.getSkillsBySkillIds(skillIds)).thenReturn(skills);
 
         Map<String, Object> model = interviewService.startInterview("1");
 

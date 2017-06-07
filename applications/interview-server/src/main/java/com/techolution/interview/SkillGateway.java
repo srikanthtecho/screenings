@@ -19,7 +19,7 @@ public class SkillGateway {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Skill[] getSkillsbySkillIds( final Set<String> skillIds) {
+    public Skill[] getSkillsBySkillIds(final Set<String> skillIds) {
 
         Skill[] skills = new Skill[skillIds.size()];
 
