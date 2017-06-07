@@ -3,9 +3,7 @@ package com.techolution.interview;
 import com.techolution.position.Position;
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,12 +30,24 @@ public class InterviewServiceTest {
     private InterviewService interviewService;
 
     @Mock
-    private RestTemplate mockRestTemplate = new RestTemplate();
+    private PositionGateway positionGateway;
+
+    @Mock
+    private SkillGateway skillGateway;
+
+    @Before
+    public void before() {
+        interviewService.setPositionGateway(positionGateway);
+        interviewService.setSkillGateway(skillGateway);
+    }
 
     @Test
     public void startInterview() {
 
         final Interview interview = createInterview();
+
+        Set<String> skillIds = new HashSet<>();
+        skillIds.add("1");
 
         final Skill[] skills = new Skill[1];
 
@@ -45,13 +55,11 @@ public class InterviewServiceTest {
 
         final Position position = createPosition();
 
-        interviewService.setRestTemplate(mockRestTemplate);
-
         when(mockInterviewRepository.findOne("1")).thenReturn(interview);
 
-        when(mockRestTemplate.getForObject(anyString(), any(), anyString())).thenReturn(position);
+        when(positionGateway.getPositionById("1")).thenReturn(position);
 
-        when(mockRestTemplate.getForObject(anyString(), any())).thenReturn(skills);
+        when(skillGateway.getSkillsbySkillIds(skillIds)).thenReturn(skills);
 
         Map<String, Object> model = interviewService.startInterview("1");
 

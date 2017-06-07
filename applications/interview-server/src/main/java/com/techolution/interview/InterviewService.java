@@ -1,13 +1,17 @@
 package com.techolution.interview;
 
+import com.netflix.discovery.converters.Auto;
 import com.techolution.position.Position;
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -26,20 +30,17 @@ public class InterviewService {
 
     private InterviewRepository interviewRepository;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private PositionGateway positionGateway;
+
+    @Autowired
+    private SkillGateway skillGateway;
 
     public InterviewService(InterviewRepository interviewRepository) {
         this.interviewRepository = interviewRepository;
-    }
-
-    @PostConstruct
-    public void init() {
-
-        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
-            protected boolean hasError(HttpStatus statusCode) {
-                return false;
-            }
-        });
     }
 
     public List<Interview> getAllInterviews() {
@@ -69,59 +70,41 @@ public class InterviewService {
     }
 
     /**
-     * Returns list of questions associated to this position
+     * Returns list of questions associated to this position.
      *
      * @return
      */
     public Map<String, Object> startInterview(final String id) {
 
-        Map<String, Object> model  = new HashMap<>();
+        Map<String, Object> model = new HashMap<>();
         final Interview interview = interviewRepository.findOne(id);
+
+        model.put("interview", interview);
         final String positionId = interview.getPositionId();
+
+        if (StringUtils.isBlank(positionId)) {
+            return model;
+        }
+
+        final Position position = positionGateway.getPositionById(positionId);
+
+        model.put("position", position);
 
         try {
 
-            log.info("Requesting position service to access position information for the interview id - ",
-                interview.getId());
-
-            /**
-             * TODO Replace hardcoded IP addresses with Eureka names
-             * Bug opened for Eureka heart beat issue
-             */
-            final Position position = restTemplate.getForObject(
-                "http://localhost:8083/json/positions/{id}",
-                Position.class, positionId);
-
-            log.info("Response received from position service  for interview {} and position {}",
-                interview.getId(), position.getId());
-
             final Set<String> skillIds = position.getSkills();
+            final Skill[] skills = skillGateway.getSkillsbySkillIds(skillIds);
 
-            if (CollectionUtils.isEmpty(skillIds)) {
+            if (ArrayUtils.isEmpty(skills)) {
                 return model;
             }
 
-            final String params = StringUtils.join(skillIds, ",");
             final Set<Question> questions = new HashSet<>();
 
-            String url = "http://localhost:8082/json/skills/ids/" + params;
-
-            log.info("Requesting skill service to access skill information of the position id - {}",
-                position.getId());
-
-            Skill[] skills = restTemplate.getForObject(url, Skill[].class);
-
-            log.info("Response received from skill service  for position {}",
-                position.getId());
-
-            /**
-             * TODO replace this with java 8 streams and collectors.
-             */
             for (final Skill skill : skills) {
                 questions.addAll(skill.getQuestions());
             }
-            model.put("interview", interview);
-            model.put("position", position);
+
             model.put("questions", questions);
 
             return model;
@@ -131,4 +114,12 @@ public class InterviewService {
         return null;
     }
 
+
+    public void setPositionGateway(PositionGateway positionGateway) {
+        this.positionGateway = positionGateway;
+    }
+
+    public void setSkillGateway(SkillGateway skillGateway) {
+        this.skillGateway = skillGateway;
+    }
 }

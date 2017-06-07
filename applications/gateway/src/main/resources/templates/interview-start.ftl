@@ -6,6 +6,8 @@
 Interview started for the candidate <em>${model.interview.candidateName}</em> for  the position <em>${position.positionName}</em>
 
 <div class="jumbotron">
+
+ <#if model.questions?has_content>
   <ul>
     <#list model.questions as question>
       <div class = "row">
@@ -27,8 +29,10 @@ Interview started for the candidate <em>${model.interview.candidateName}</em> fo
          </select>
        </div>
       </div>
-
     </#list>
   </ul>
+  <#else>
+  No questions attached to this position.
+</#if>
 </div>
 </@mainLayout.application>
