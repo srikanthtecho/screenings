@@ -2,18 +2,14 @@ package com.techolution.interview;
 
 import com.techolution.position.Position;
 import com.techolution.position.PositionGateway;
-import com.techolution.skill.Question;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by tdelesio on 5/25/17.
@@ -51,8 +47,8 @@ public class InterviewController {
 
     @PostMapping("/interviews")
     public ModelAndView createInterview(Interview interview) {
-        interview = interviewGateway.createInterview(interview);
 
+        interview = interviewGateway.createInterview(interview);
         return new ModelAndView("interview", preloadInterview());
     }
 
@@ -79,5 +75,13 @@ public class InterviewController {
         model.put("model",  model);
         return new ModelAndView("interview-start", model);
     }
+
+    @PutMapping("interviews/{id}/answer")
+    public Response addAnswer(@PathVariable String id,
+                                  @RequestBody final Map<String, String> map) {
+
+        return interviewGateway.addAnswer(id, map);
+    }
+
 
 }

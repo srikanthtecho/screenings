@@ -1,6 +1,7 @@
 package com.techolution.interview;
 
 import com.techolution.position.Position;
+import com.techolution.skill.CandidateAnswer;
 import com.techolution.skill.Question;
 import com.techolution.skill.Skill;
 import org.apache.commons.lang.ArrayUtils;
@@ -8,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,14 +29,18 @@ public class InterviewService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private RedisTemplate<Object, Object> redisTemplate;
+
     @Autowired
     private PositionGateway positionGateway;
 
     @Autowired
     private SkillGateway skillGateway;
 
-    public InterviewService(InterviewRepository interviewRepository) {
+    public InterviewService(InterviewRepository interviewRepository,
+                            RedisTemplate<Object, Object> redisTemplate) {
         this.interviewRepository = interviewRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     public List<Interview> getAllInterviews() {
@@ -68,7 +74,7 @@ public class InterviewService {
      *
      * @return
      */
-    public Map<String, Object> startInterview(final String id) {
+    public Map<String, Object>  startInterview(final String id) {
 
         Map<String, Object> model = new HashMap<>();
         final Interview interview = interviewRepository.findOne(id);
@@ -99,6 +105,14 @@ public class InterviewService {
                 questions.addAll(skill.getQuestions());
             }
 
+            Map<Object, Object> answers = redisTemplate.opsForHash().entries(id);
+            for (Question question : questions) {
+                final CandidateAnswer candidateAnswer = new CandidateAnswer();
+                candidateAnswer.setActualAnswer((String) answers.get(question.getId()));
+
+                question.setCandidateAnswer(candidateAnswer);
+            }
+
             model.put("questions", questions);
 
             return model;
@@ -106,6 +120,11 @@ public class InterviewService {
             log.error("Exception occurred accessing positions by id - {}", positionId, ex);
         }
         return null;
+    }
+
+    public void addAnswer(final String interviewId,
+                          final  String questionId, final String answer) {
+        redisTemplate.opsForHash().put(interviewId, questionId, answer);
     }
 
 

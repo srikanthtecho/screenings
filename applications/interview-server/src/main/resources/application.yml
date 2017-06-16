@@ -12,3 +12,7 @@ spring:
     basic:
       enabled: false
 
+redis:
+  hostname: redis
+  port: 6379
+

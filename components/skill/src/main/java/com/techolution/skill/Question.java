@@ -1,5 +1,4 @@
 package com.techolution.skill;
-
 import java.util.UUID;
 
 /**
@@ -11,6 +10,9 @@ public class Question {
     private String question;
     private String correctAnswer;
     private int level=1;
+
+    private CandidateAnswer candidateAnswer;
+
 
     private String skillId;
 
@@ -57,6 +59,14 @@ public class Question {
 
     public void setSkillId(String skillId) {
         this.skillId = skillId;
+    }
+
+    public CandidateAnswer getCandidateAnswer() {
+        return candidateAnswer;
+    }
+
+    public void setCandidateAnswer(CandidateAnswer candidateAnswer) {
+        this.candidateAnswer = candidateAnswer;
     }
 
     @Override

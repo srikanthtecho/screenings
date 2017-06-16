@@ -42,4 +42,16 @@ public class InterviewRestController {
         return interviewService.startInterview(id);
 
     }
+
+    @PutMapping("/{id}/answer")
+    public void addAnswer(final @PathVariable String id,
+                          @RequestBody Map<String, String> map) {
+
+        final String questionId = map.get("questionId");
+        final String answer = map.get("answer");
+
+        interviewService.addAnswer(id, questionId, answer);
+    }
+
+
 }
