@@ -32,7 +32,7 @@ public class InterviewService {
 
     private RedisTemplate<Object, Object> redisTemplate;
 
-    private HashOperations<Object, Object, Object> opsForHash;
+    private HashOperations<Object, Object, Object> hashOperations;
 
     @Autowired
     private PositionGateway positionGateway;
@@ -42,10 +42,10 @@ public class InterviewService {
 
     public InterviewService(InterviewRepository interviewRepository,
                             RedisTemplate<Object, Object> redisTemplate,
-                                HashOperations<Object, Object, Object> opsForHash) {
+                                HashOperations<Object, Object, Object> hashOperations) {
         this.interviewRepository = interviewRepository;
         this.redisTemplate = redisTemplate;
-        this.opsForHash = opsForHash;
+        this.hashOperations = hashOperations;
     }
 
     public List<Interview> getAllInterviews() {
@@ -147,7 +147,7 @@ public class InterviewService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void setOpsForHash(HashOperations<Object, Object, Object> opsForHash) {
-        this.opsForHash = opsForHash;
+    public void setHashOperations(HashOperations<Object, Object, Object> hashOperations) {
+        this.hashOperations = hashOperations;
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.*;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,7 +46,7 @@ public class InterviewServiceTest {
         interviewService.setPositionGateway(positionGateway);
         interviewService.setSkillGateway(skillGateway);
         interviewService.setRedisTemplate(redisTemplate);
-        interviewService.setOpsForHash(opsForHash);
+        interviewService.setHashOperations(opsForHash);
     }
 
     @Test

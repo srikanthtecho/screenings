@@ -6,11 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @PropertySource("application.yml")
 public class  RedisConfig {
+
 
     @Value("${redis.hostname}")
     private String redisHostName;
@@ -37,6 +39,12 @@ public class  RedisConfig {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
         return redisTemplate;
+    }
+
+    @Bean
+    HashOperations<Object, Object, Object> hashOperations() {
+        HashOperations<Object, Object, Object> hashOperations = redisTemplate().opsForHash();
+        return hashOperations;
     }
 
 }
