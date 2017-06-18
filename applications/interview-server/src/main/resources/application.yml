@@ -13,6 +13,6 @@ spring:
       enabled: false
 
 redis:
-  hostname: redis
+  hostname: localhost
   port: 6379
 

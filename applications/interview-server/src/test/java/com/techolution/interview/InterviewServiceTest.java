@@ -9,10 +9,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.*;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,10 +36,18 @@ public class InterviewServiceTest {
     @Mock
     private SkillGateway skillGateway;
 
+    @Mock
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    @Mock
+    private HashOperations<Object, Object, Object> opsForHash;
+
     @Before
     public void before() {
         interviewService.setPositionGateway(positionGateway);
         interviewService.setSkillGateway(skillGateway);
+        interviewService.setRedisTemplate(redisTemplate);
+        interviewService.setOpsForHash(opsForHash);
     }
 
     @Test
@@ -52,6 +63,12 @@ public class InterviewServiceTest {
         skills[0] = createSkill();
 
         final Position position = createPosition();
+
+        Map<Object, Object> answers = new HashMap<>();
+        answers.put("123", "Set doesn't allow duplicates");
+
+        when(redisTemplate.opsForHash()).thenReturn(opsForHash);
+        when(opsForHash.entries("id")).thenReturn(answers);
 
         when(mockInterviewRepository.findOne("1")).thenReturn(interview);
 

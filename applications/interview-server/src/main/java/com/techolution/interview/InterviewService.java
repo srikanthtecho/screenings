@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +32,8 @@ public class InterviewService {
 
     private RedisTemplate<Object, Object> redisTemplate;
 
+    private HashOperations<Object, Object, Object> opsForHash;
+
     @Autowired
     private PositionGateway positionGateway;
 
@@ -38,9 +41,11 @@ public class InterviewService {
     private SkillGateway skillGateway;
 
     public InterviewService(InterviewRepository interviewRepository,
-                            RedisTemplate<Object, Object> redisTemplate) {
+                            RedisTemplate<Object, Object> redisTemplate,
+                                HashOperations<Object, Object, Object> opsForHash) {
         this.interviewRepository = interviewRepository;
         this.redisTemplate = redisTemplate;
+        this.opsForHash = opsForHash;
     }
 
     public List<Interview> getAllInterviews() {
@@ -74,7 +79,7 @@ public class InterviewService {
      *
      * @return
      */
-    public Map<String, Object>  startInterview(final String id) {
+    public Map<String, Object> startInterview(final String id) {
 
         Map<String, Object> model = new HashMap<>();
         final Interview interview = interviewRepository.findOne(id);
@@ -105,7 +110,9 @@ public class InterviewService {
                 questions.addAll(skill.getQuestions());
             }
 
-            Map<Object, Object> answers = redisTemplate.opsForHash().entries(id);
+            HashOperations<Object, Object, Object> opsForHash = redisTemplate.opsForHash();
+            Map<Object, Object> answers = opsForHash.entries(id);
+
             for (Question question : questions) {
                 final CandidateAnswer candidateAnswer = new CandidateAnswer();
                 candidateAnswer.setActualAnswer((String) answers.get(question.getId()));
@@ -123,7 +130,7 @@ public class InterviewService {
     }
 
     public void addAnswer(final String interviewId,
-                          final  String questionId, final String answer) {
+                          final String questionId, final String answer) {
         redisTemplate.opsForHash().put(interviewId, questionId, answer);
     }
 
@@ -134,5 +141,13 @@ public class InterviewService {
 
     public void setSkillGateway(SkillGateway skillGateway) {
         this.skillGateway = skillGateway;
+    }
+
+    public void setRedisTemplate(RedisTemplate<Object, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public void setOpsForHash(HashOperations<Object, Object, Object> opsForHash) {
+        this.opsForHash = opsForHash;
     }
 }
